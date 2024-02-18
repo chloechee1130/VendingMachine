@@ -1,19 +1,12 @@
-def vending_machine(payment, beverage):
+# All the available MYR notes
+rm_notes = [1, 5, 10, 20, 50, 100]
+
+# Prices of the beverages
+beverages = {"Beverage1": 2, "Beverage2": 5, "Beverage3": 10, "Beverage4": 13, "Beverage5": 20}
+
+def vending_machine(inserted_notes, beverage):
     """
-    The vending_machine function takes in two input arguments. The first input argument is the payment
-    variable, the payment variable represents the amount of money given to the vending machine. The
-    second input argument is the name of the selected beverage. 
-    
-    The function calculates how much change needs to be given by subtracting the price of the beverage from the payment. Then initialize two
-    memos. The first memo will store the minimum number of notes needed for each amount of change
-    from 0 to change value. memo_notes will store the last note used for each amount of change. After
-    building up the memo and memo_notes, for each amount of change from the smallest note to change,
-    it finds the minimum number of notes needed and the last note used. Now, calculate which notes to
-    return as change. It starts with the total change and subtracts each note used from it until no change
-    is left. The notes used are stored in change_notes. Finally, the code returns two things, the minimum
-    number of notes needed for the total change and a list of notes to be given as change.
-    
-    Calculates the minimum number of notes needed for change in a vending machine transaction.
+    The vending_machine function calculates the minimum number of notes needed for change in a vending machine transaction.
 
     Parameters:
         payment (int): The amount of money given to the vending machine.
@@ -23,15 +16,14 @@ def vending_machine(payment, beverage):
         min_notes (int): The minimum number of notes needed for the total change.
         change_notes (List[int]): A list of notes to be given as change.
     """
-    # All the available MYR notes
-    rm_notes = [1, 5, 10, 20, 50, 100]
+    # Calculate the total payment
+    payment = sum(inserted_notes)
 
-    # Prices of the beverages
-    beverages = {"Beverage1": 33, "Beverage2": 12, "Beverage3": 5, "Beverage4": 24, "Beverage5": 50}
-
-    # Price of the selected beverage
+    # Check if the payment is enough to buy the beverage
     price = beverages[beverage]
-
+    if payment < price:
+        return "Insufficient payment. Please insert more notes."
+    
     # Calculate the change
     change = payment - price
 
@@ -56,14 +48,40 @@ def vending_machine(payment, beverage):
     # Return the min number of notes & the list of notes
     return memo[payment - price], change_notes
 
-# Test the function
-payment = 78
-beverage = "Beverage5"
-min_notes, change_notes = vending_machine(payment, beverage)
-print(f"Payment: {payment} \nBeverage: {beverage}")
-print(f"Min number of notes for change is: {min_notes}")
-print(f"Min notes for change are: {change_notes}")
+def main():
+    """
+    The main function handles the interaction with the user. 
+    It prints out a menu of beverages, asks the user to select a beverage and insert notes, 
+    and then calls the vending_machine function to calculate the change.
+    """
+    # Print the menu
+    print("Available beverages:")
+    for i, beverage in enumerate(beverages, start=1):
+        print(f"{i}. {beverage} - MYR {beverages[beverage]}")
+    
+    # Prompt the user to insert notes and select a beverage
+    beverage_number = int(input("Please select a beverage by typing its number: "))
+    beverages_list = list(beverages.items())
+    beverage = beverages_list[beverage_number - 1][0] 
 
+    inserted_notes = []
+    while True:
+        note = input("Please insert a note (or type 'done' when finished): ")
+        if note.lower() == 'done':
+            break
+        inserted_notes.append(int(note))
 
+    min_notes, change_notes = vending_machine(inserted_notes, beverage)
+    if isinstance(min_notes, str):
+        print(min_notes)
+    else:
+        print(f"Min number of notes for change is: {min_notes}")
+        print(f"Min notes for change are: {change_notes}")
+
+if __name__ == "__main__":
+    main()
 
         
+# Test the function
+# insert note = 10, 10
+# beverage = "Beverage4"
