@@ -1,6 +1,10 @@
 # All the available MYR notes
 rm_notes = [1, 5, 10, 20, 50, 100]
 
+# Number of each note available in the vending machine
+note_counts = {1: 20, 5: 1, 10: 1, 20: 1, 50: 2, 100: 2}
+# beverage 1 with 50
+
 # Prices of the beverages
 beverages = {"Beverage1": 2, "Beverage2": 5, "Beverage3": 10, "Beverage4": 13, "Beverage5": 20}
 
@@ -31,18 +35,21 @@ def vending_machine(inserted_notes, beverage):
     memo = [0] + [float('inf')] * change    # store min number of notes needed for each amount of change from 0 to change
     memo_notes = [0] + [None] * change      # store the last note used for each amount of change
     
+
     # Build the memo & memo_notes arrays
     for i in range(min(rm_notes), change + 1):
         min_notes = float('inf'), None
         for note in rm_notes:
-            if i - note >= 0 and memo[i - note] < min_notes[0]:
+            if i - note >= 0 and memo[i - note] < min_notes[0] and note_counts[note] > 0:
                     min_notes = memo[i - note], note
         memo[i], memo_notes[i] = min_notes[0] + 1, min_notes[1]
-
+    print(f"memo = {memo}\nmemo_notes = {memo_notes}")
     # Build the list to keep track notes for the change
     change_notes = []
     while change > 0:
         note = memo_notes[change]
+        if note_counts[note] == 0:
+            return "Insufficient notes in the vending machine. Please try again later."
         change_notes.append(note)
         change -= note
     # Return the min number of notes & the list of notes
