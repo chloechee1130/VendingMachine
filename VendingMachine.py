@@ -34,7 +34,6 @@ def vending_machine(inserted_notes, beverage):
     # Initialize the memo & memo_notes arrays
     memo = [0] + [float('inf')] * change    # store min number of notes needed for each amount of change from 0 to change
     memo_notes = [0] + [None] * change      # store the last note used for each amount of change
-    
 
     # Build the memo & memo_notes arrays
     for i in range(min(rm_notes), change + 1):
@@ -43,7 +42,8 @@ def vending_machine(inserted_notes, beverage):
             if i - note >= 0 and memo[i - note] < min_notes[0] and note_counts[note] > 0:
                     min_notes = memo[i - note], note
         memo[i], memo_notes[i] = min_notes[0] + 1, min_notes[1]
-    print(f"memo = {memo}\nmemo_notes = {memo_notes}")
+    # print(f"memo = {memo}\nmemo_notes = {memo_notes}")
+        
     # Build the list to keep track notes for the change
     change_notes = []
     while change > 0:
